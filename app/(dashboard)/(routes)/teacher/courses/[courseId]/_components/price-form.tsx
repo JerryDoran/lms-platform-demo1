@@ -19,29 +19,26 @@ import { Pencil } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Textarea } from '@/components/ui/textarea';
 import { Course } from '@prisma/client';
+import { formatPrice } from '@/lib/format';
 
-type DescriptionFormProps = {
+type PriceFormProps = {
   initialData: Course;
   courseId: string;
 };
 
 const formSchema = z.object({
-  description: z.string().min(1, { message: 'A description is required' }),
+  price: z.coerce.number(),
 });
 
-export default function DescriptionForm({
-  initialData,
-  courseId,
-}: DescriptionFormProps) {
+export default function PriceForm({ initialData, courseId }: PriceFormProps) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      description: initialData?.description || '',
+      price: initialData?.price || undefined,
     },
   });
 
@@ -50,7 +47,7 @@ export default function DescriptionForm({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success('Course successfully updated');
+      toast.success('Course successfull updated');
       toggleEdit();
       router.refresh();
     } catch (error) {
@@ -65,14 +62,14 @@ export default function DescriptionForm({
   return (
     <section className='mt-6 border bg-slate-100 rounded-md p-4'>
       <div className='font-md flex items-center justify-between'>
-        Course description
+        Course price
         <Button onClick={toggleEdit} variant='ghost'>
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
               <Pencil className='h-4 w-4 mr-2' />
-              Edit description
+              Edit price
             </>
           )}
         </Button>
@@ -81,10 +78,10 @@ export default function DescriptionForm({
         <p
           className={cn(
             'text-sm mt-2',
-            !initialData.description && 'text-slate-500 italic'
+            !initialData.price && 'text-slate-500 italic'
           )}
         >
-          {initialData.description || 'No description'}
+          {initialData.price ? formatPrice(initialData.price) : 'No price'}
         </p>
       )}
       {isEditing && (
@@ -95,13 +92,15 @@ export default function DescriptionForm({
           >
             <FormField
               control={form.control}
-              name='description'
+              name='price'
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea
+                    <Input
+                      type='number'
+                      step='.01'
                       disabled={isSubmitting}
-                      placeholder="e.g. 'This course is about ...'"
+                      placeholder='Set a price for your course'
                       {...field}
                     />
                   </FormControl>

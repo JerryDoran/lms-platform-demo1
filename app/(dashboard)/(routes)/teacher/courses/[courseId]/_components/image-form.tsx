@@ -43,7 +43,7 @@ export default function ImageForm({ initialData, courseId }: ImageFormProps) {
   return (
     <section className='mt-6 border bg-slate-100 rounded-md p-4'>
       <div className='font-md flex items-center justify-between'>
-        Course Image
+        Course image
         <Button onClick={toggleEdit} variant='ghost'>
           {isEditing && <>Cancel</>}
           {!isEditing && !initialData.imageUrl && (

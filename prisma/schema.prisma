@@ -24,6 +24,8 @@ model Course {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   category    Category?    @relation(fields: [categoryId], references: [id])
+  chapters    Chapter[]
+  purchases   Purchase[]
 
   @@index([categoryId])
 }
@@ -46,4 +48,64 @@ model Category {
   courses   Course[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Chapter {
+  id           String         @id @default(uuid()) @map("_id")
+  title        String
+  description  String?
+  videoUrl     String?
+  position     Int
+  isPublished  Boolean        @default(false)
+  isFree       Boolean        @default(false)
+  muxData      MuxData?
+  courseId     String
+  course       Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  userProgress UserProgress[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([courseId])
+}
+
+model MuxData {
+  id         String   @id @default(uuid()) @map("_id")
+  assetId    String
+  playbackId String?
+  chapterId  String   @unique
+  chapter    Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model UserProgress {
+  id         String   @id @default(uuid()) @map("_id")
+  userId     String
+  chapterId  String
+  chapter    Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  isComplete Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, chapterId])
+  @@index([chapterId])
+}
+
+model Purchase {
+  id        String   @id @default(uuid()) @map("_id")
+  userId    String
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId])
+}
+
+model StripeCustomer {
+  id               String   @id @default(uuid()) @map("_id")
+  userId           String   @unique
+  stripeCustomerId String   @unique
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
