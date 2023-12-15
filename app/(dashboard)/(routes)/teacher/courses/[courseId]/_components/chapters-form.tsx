@@ -75,6 +75,10 @@ export default function ChaptersForm({
     }
   }
 
+  async function onEdit(id:string){
+    router.push(`/teacher/courses/${courseId}/chapters/${id}`)
+  }
+
   function toggleCreating() {
     setIsCreating((prev) => !prev);
   }
@@ -138,7 +142,7 @@ export default function ChaptersForm({
         >
           {!initialData.chapters.length && 'No chapters'}
           <ChaptersList
-            onEdit={() => {}}
+            onEdit={onEdit}
             onReorder={onReorder}
             items={initialData.chapters || []}
           />
