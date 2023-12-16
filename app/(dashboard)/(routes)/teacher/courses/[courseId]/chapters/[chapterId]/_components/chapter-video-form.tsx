@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import * as z from 'zod';
 import axios from 'axios';
+import MuxPlayer from '@mux/mux-player-react';
 
 import { Button } from '@/components/ui/button';
 import { Pencil, PlusCircle, VideoIcon } from 'lucide-react';
@@ -74,7 +75,15 @@ export default function ChapterVideoForm({
             <VideoIcon className='h-10 w-10 text-slate-500' />
           </div>
         ) : (
-          <div className='relative aspect-video mt-2'>Video uploaded</div>
+          <div className='relative aspect-video mt-2'>
+            <MuxPlayer
+              playbackId={initialData?.muxData?.playbackId || ''}
+              metadata={{
+                title: initialData.title,
+                description: initialData.description,
+              }}
+            />
+          </div>
         ))}
       {isEditing && (
         <div className=''>
