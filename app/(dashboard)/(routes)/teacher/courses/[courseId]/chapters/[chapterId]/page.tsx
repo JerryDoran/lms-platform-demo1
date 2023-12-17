@@ -9,6 +9,7 @@ import ChapterDescriptionForm from './_components/chapter-description-form';
 import ChapterAccessForm from './_components/chapter-access-form copy';
 import ChapterVideoForm from './_components/chapter-video-form';
 import Banner from '@/components/banner';
+import ChapterActions from './_components/chapter-actions';
 
 type ChapterPageProps = {
   params: {
@@ -71,7 +72,12 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
                   Complete all fields {completionText}
                 </span>
               </div>
-              <ChapterActions />
+              <ChapterActions
+                disabled={!isComplete}
+                courseId={params.courseId}
+                chapterId={params.chapterId}
+                isPublished={chapter.isPublished}
+              />
             </div>
           </div>
         </div>
