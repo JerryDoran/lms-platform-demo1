@@ -7,6 +7,8 @@ import VideoPlayer from './_components/video-player';
 import CourseEnrollButton from './_components/course-enroll-button';
 import { Separator } from '@/components/ui/separator';
 import Preview from '@/components/preview';
+import CourseProgress from '@/components/course-progress';
+import CourseProgressButton from './_components/course-progress-button';
 
 export default async function ChapterPage({
   params,
@@ -67,7 +69,12 @@ export default async function ChapterPage({
           <div className='p-4 flex flex-col md:flex-row items-center justify-between'>
             <h2 className='text-2xl font-semibold mb-2'>{chapter.title}</h2>
             {purchase ? (
-              <div>{/* TODO: add progress button */}</div>
+              <CourseProgressButton
+                chapterId={params.chapterId}
+                courseId={params.courseId}
+                nextChapterId={nextChapter?.id}
+                isCompleted={!!userProgress?.isComplete}
+              />
             ) : (
               <CourseEnrollButton
                 courseId={params.courseId}
