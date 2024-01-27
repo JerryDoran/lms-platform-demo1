@@ -43,7 +43,7 @@ export default function CourseProgressButton({
         router.push(`/courses/${courseId}/chapters/${nextChapterId}`);
       }
 
-      toast.success('Course progress updated successfully');
+      toast.success('Course progress updated');
       router.refresh();
     } catch (error) {
       toast.error('Oops...Something went wrong');
